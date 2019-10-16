@@ -4,7 +4,7 @@ from utils import *
 def get_article(url):
 	return '\n\n'.join( \
 		filter(map(open_url(url).find('div', {'class': 'field-item even', 'property': 'content:encoded'}).find_all('p'), \
-			lambda x : x.text.lower()
+			lambda x : x.text
 		), lambda x : len(x) > 0)
 	)
 
@@ -15,7 +15,7 @@ def get_article_url(page=0, query='', matcher=r'^.*$'):
 		yield url, get_article(url)
 
 def tokenize_words(document):
-	return map(re.split(r'[^\w\.,$\-]+', document), lambda text : re.sub(r'(^[\.]|[\.\?\!\,]+)', '', text))
+	return filter(map(re.split(r'[^\w\.,$\-]+', document.lower()), lambda text: re.sub(r'(^[\.]|[\.\?\!\,]+)', '', text)), lambda text: len(text) > 0)
 
 def word_counts(document):
 	freq_table = {}
